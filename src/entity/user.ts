@@ -4,8 +4,17 @@ export class User {
   /**
    * 用户游戏ID
    */
-  @prop({ type: () => Number, unique: true })
+  @prop({ type: () => String, unique: true, required: true })
   public userId: string;
+
+  /**
+   * 用户QQ
+   * @type {string}
+   * @memberof User
+   * @description 用户绑定的QQ
+   */
+  @prop({ type: () => String, unique: true, required: true })
+  public qNumber!: string; // QQ号
 
   /**
    * 创建人id
@@ -14,7 +23,7 @@ export class User {
    * @description 创建人
    */
   @prop({ type: () => String, required: true })
-  public creatorId!: string;
+  public creatorId: string;
 
   /**
    * 用户状态：0-正常，1-停用
@@ -22,8 +31,14 @@ export class User {
    * @memberof User
    * @description 0-正常，1-停用
    */
-  @prop({ type: () => Number, default: 0 })
-  public status: 0 | 1;
+  @prop({ type: () => String, default: '0' })
+  public status?: '0' | '1';
+
+  /**
+   * 计费模式 0-按次，1-按时间
+   */
+  @prop({ type: () => String, default: '1' })
+  public billingMode?: '0' | '1';
 
   /**
    * 剩余次数
@@ -31,43 +46,28 @@ export class User {
    * @memberof User
    * @description 仅在计费模式为2时有效
    */
-  @prop({ type: () => Number })
+  @prop({ type: () => Number, default: 0 })
   public surplusCount?: number;
 
   /**
-   * 剩余时间
+   * 到期时间
    * @type {string}
    * @memberof User
    * @description 仅在计费模式为3时有效
    */
-  @prop({ type: () => String })
-  public surplusTime?: string;
-
-  /**
-   * 用户QQ
-   * @type {string}
-   * @memberof User
-   * @description 用户绑定的QQ
-   */
-  @prop({ type: () => String, unique: true })
-  public qqNumber?: string; // QQ号
-
-  /**
-   * 用户密码
-   * @type {string}
-   * @memberof User
-   * @description 用户密码
-   */
-  @prop({ type: () => String })
-  public password?: string; // 密码
+  @prop({
+    type: () => String,
+    default: new Date().valueOf().toString().substring(0, 10),
+  })
+  public expireTime?: string;
 
   /**
    * 每日使用次数
    * @type {number}
    * @memberof User
-   * @description 仅在计费模式为2时有效
+   * @description 每次调用时判断天数是否相同，不同则重置为0
    */
-  @prop({ type: () => Number })
+  @prop({ type: () => Number, default: 0 })
   public useCount?: number;
 
   /**
@@ -76,7 +76,10 @@ export class User {
    * @memberof User
    * @description 最后一次登陆时间
    */
-  @prop({ type: () => String })
+  @prop({
+    type: () => String,
+    default: new Date().valueOf().toString().substring(0, 10),
+  })
   public lastLoginTime?: string;
 
   /**
@@ -85,6 +88,9 @@ export class User {
    * @memberof User
    * @description 注册时间
    */
-  @prop({ type: () => String })
+  @prop({
+    type: () => String,
+    default: new Date().valueOf().toString().substring(0, 10),
+  })
   public registerTime?: string;
 }

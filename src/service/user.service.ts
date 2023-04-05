@@ -1,42 +1,76 @@
 import { Provide } from '@midwayjs/core';
-import { IUserOptions } from '../interface';
+import { IRechargeTimeOptions, IUserOptions } from '../interface';
 import { InjectEntityModel } from '@midwayjs/typegoose';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { User } from '../entity/user';
+import { LzResponse } from '../utils';
 
 @Provide()
 export class UserService {
   @InjectEntityModel(User)
   userModel: ReturnModelType<typeof User>;
 
-  async getUser(options: IUserOptions) {
+  async createUser(options: User) {
+    const res = new LzResponse();
+    const targetUser = await this.userModel.create(options);
     return {
-      uid: options.uid,
-      username: 'mockedName',
-      phone: '12345678901',
-      email: 'xxx.xxx@xxx.com',
+      success: res.success || false,
+      message: res.message || '用户创建失败',
+      data: targetUser,
     };
   }
-  async createUser(options: User) {
-    return await this.userModel.create(options);
+
+  /**
+   * 用户剩余时间充值
+   */
+  async rechargeTime(options: IRechargeTimeOptions) {
+    const res = new LzResponse();
+    const { qNumber, time } = options;
+    const targetUser = await this.userModel.findOne({ qNumber: qNumber });
+    if (targetUser) {
+      targetUser.expireTime = (
+        Number(targetUser.expireTime) + Number(time)
+      ).toString();
+      res.data = await targetUser.save();
+    } else {
+      res.success = false;
+      res.message = '用户不存在';
+    }
+    return res;
   }
-}
 
-@Provide()
-export class TestService {
-  @InjectEntityModel(User)
-  userModel: ReturnModelType<typeof User>;
+  /**
+   * 获取用户信息
+   */
+  async getUserInfo(options: IUserOptions) {
+    const res = new LzResponse();
+    const { qNumber } = options;
+    const targetUser = await this.userModel.findOne({ qNumber: qNumber });
+    if (targetUser) {
+      res.data = targetUser;
+    } else {
+      res.success = false;
+      res.message = '用户不存在';
+    }
+    return res;
+  }
 
-  async getTest() {
-    // create data
-    // const { _id: id } = await this.userModel.create({
-    //   name: 'JohnDoe',
-    //   jobs: ['Cleaner'],
-    // } as User); // an "as" assertion, to have types for all properties
-
-    // find data
-    const user = await this.userModel.findById('').exec();
-    console.log(user);
-    return user;
+  /**
+   * 更新用户信息
+   * @param options
+   * @returns
+   * @example
+   * */
+  async updateUserInfo(options: IUserOptions) {
+    const res = new LzResponse();
+    const { qNumber, ...rest } = options;
+    const targetUser = await this.userModel.findOneAndUpdate({ qNumber }, rest);
+    if (targetUser) {
+      res.data = targetUser;
+    } else {
+      res.success = false;
+      res.message = '用户不存在';
+    }
+    return res;
   }
 }

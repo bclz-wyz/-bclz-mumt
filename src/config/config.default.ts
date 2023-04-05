@@ -1,5 +1,6 @@
 import { MidwayConfig } from '@midwayjs/core';
 import { User } from '../entity/user';
+import { Card } from '../entity/card';
 
 export default {
   // use for cookie sign key, should change to your own and keep security
@@ -19,7 +20,7 @@ export default {
           pass: '',
         },
         // 关联实体
-        entities: [User],
+        entities: [User, Card],
       },
     },
   },
