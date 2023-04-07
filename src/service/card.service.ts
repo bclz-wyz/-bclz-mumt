@@ -68,20 +68,23 @@ export class CardService {
   /**
    * 使用卡密id，充值
    */
-  async rechargeCard(options: { id: string; qNumber?: string }) {
+  async rechargeCard(options: { id: string; qNumber: string }) {
     const { id, qNumber } = options;
     const res = new LzResponse();
-    const targetCard = await this.cardModel.findOneAndUpdate(
-      { id, status: '0' },
-      {
-        used: true,
-        useTime: new Date().valueOf().toString().substring(0, 10),
-        userId: qNumber,
-        status: '1',
-      }
-    );
-    if (targetCard) {
+    let targetCard = await this.cardModel.findOne({ id, status: '0' });
+
+    if (targetCard?.status === '0') {
+      targetCard.useTime = new Date().valueOf().toString().substring(0, 10);
+      targetCard.userId = qNumber;
+      targetCard.status = '1';
+      targetCard = await targetCard.save();
       res.data = targetCard;
+    } else if (targetCard?.status === '1') {
+      res.success = false;
+      res.message = '卡密已被使用';
+    } else if (targetCard?.status === '2') {
+      res.success = false;
+      res.message = '卡密已作废';
     } else {
       res.success = false;
       res.message = '卡密不存在或已被使用';

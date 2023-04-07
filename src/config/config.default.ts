@@ -11,7 +11,8 @@ export default {
   mongoose: {
     dataSource: {
       default: {
-        uri: 'mongodb://192.168.10.203:27017/test',
+        // uri: 'mongodb://192.168.10.203:27017/test',
+        uri: 'mongodb://192.168.100.3:27017/test',
         options: {
           useCreateIndex: true,
           useNewUrlParser: true,

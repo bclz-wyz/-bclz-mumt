@@ -3,7 +3,7 @@ import { IRechargeTimeOptions, IUserOptions } from '../interface';
 import { InjectEntityModel } from '@midwayjs/typegoose';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { User } from '../entity/user';
-import { LzResponse } from '../utils';
+import { LzResponse, isSameDay } from '../utils';
 
 @Provide()
 export class UserService {
@@ -46,8 +46,25 @@ export class UserService {
     const res = new LzResponse();
     const { qNumber } = options;
     const targetUser = await this.userModel.findOne({ qNumber: qNumber });
+    // console.log('targetUser', targetUser);
     if (targetUser) {
-      res.data = targetUser;
+      /**
+       * 判断当前时间和上次使用时间，如果不是同一天则清空已用次数
+       */
+      const today = new Date().valueOf().toString();
+      const { lastLoginTime } = targetUser;
+      const shouldClearCount = !isSameDay(
+        today,
+        (Number(lastLoginTime) * 1000).toString()
+      );
+      // 如果不是同一天，则更新
+      if (shouldClearCount) {
+        targetUser.useCount = 0;
+        res.data = await targetUser.save();
+        // console.log('非同一天', today, lastLoginTime, res.data);
+      } else {
+        res.data = targetUser;
+      }
     } else {
       res.success = false;
       res.message = '用户不存在';
@@ -61,10 +78,21 @@ export class UserService {
    * @returns
    * @example
    * */
-  async updateUserInfo(options: IUserOptions) {
+  async updateUserInfo(options: User) {
     const res = new LzResponse();
     const { qNumber, ...rest } = options;
-    const targetUser = await this.userModel.findOneAndUpdate({ qNumber }, rest);
+
+    // console.log('options', rest);
+
+    let targetUser = await this.userModel.findOne({ qNumber });
+
+    Object.entries(rest).forEach(item => {
+      const [key, value] = item;
+      targetUser[key] = value;
+    });
+
+    targetUser = await targetUser.save();
+
     if (targetUser) {
       res.data = targetUser;
     } else {
