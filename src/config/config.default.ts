@@ -12,13 +12,12 @@ export default {
     dataSource: {
       default: {
         // uri: 'mongodb://192.168.10.203:27017/test',
-        uri: 'mongodb://192.168.100.3:27017/test',
+        uri: 'mongodb://81.70.17.158:28017/lrs',
         options: {
-          useCreateIndex: true,
           useNewUrlParser: true,
           useUnifiedTopology: true,
-          user: '',
-          pass: '',
+          user: 'bclz',
+          pass: 'Azx761055137.',
         },
         // 关联实体
         entities: [User, Card],
