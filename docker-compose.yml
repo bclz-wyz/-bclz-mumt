@@ -13,4 +13,5 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - .:/app
-    command: sh -c "cd /app && yarn install && yarn build && yarn serve"
+    #command: sh -c "cd /app && yarn install && yarn build && yarn start"
+    command: sh -c "yarn start"
