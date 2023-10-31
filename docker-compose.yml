@@ -6,7 +6,7 @@ services:
     restart: always
     build: .
     ports:
-      - "7001:27001"
+      - "27001:7001"
     environment:
       - TZ=Asia/Shanghai
     volumes:

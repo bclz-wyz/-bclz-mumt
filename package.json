@@ -41,7 +41,7 @@
     "lint:fix": "mwts fix",
     "ci": "npm run cov",
     "build": "midway-bin build -c",
-    "pm2":"pm2-runtime start bootstrap.js --name server"
+    "serve":"pm2 start ./bootstrap.js"
   },
   "midway-bin-clean": [
     ".vscode/.tsbuildinfo",
