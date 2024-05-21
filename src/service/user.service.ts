@@ -11,13 +11,24 @@ export class UserService {
   userModel: ReturnModelType<typeof User>;
 
   async createUser(options: User) {
-    const res = new LzResponse();
-    const targetUser = await this.userModel.create(options);
-    return {
-      success: res.success || false,
-      message: res.message || '用户创建失败',
-      data: targetUser,
-    };
+    const res = new LzResponse<User>();
+    /**
+     * Step1: 判断用户是否存在
+     */
+    const { qNumber, userId } = options;
+    const checkUser = await this.userModel.findOne({ qNumber, userId });
+    if (!checkUser) {
+      const targetUser = await this.userModel.create(options);
+      return {
+        success: res.success || false,
+        message: res.message || '用户创建失败',
+        data: targetUser,
+      };
+    } else {
+      res.success = false;
+      res.message = '用户已存在';
+      return res;
+    }
   }
 
   /**

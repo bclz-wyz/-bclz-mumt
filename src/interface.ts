@@ -33,13 +33,13 @@ export interface ICardOptions {
  * 批量创建卡密的参数：具体参数如下
  * @param {number} count 卡密数量
  * @param {number} type 卡密类型
- * @param {string} creatorId 创建人id
+ * @param {string} createBy 创建人id
  * @param {string} parValue 卡密面值
  *
  */
 export interface IBatchCreateCardOptions {
   count: number;
   type: number;
-  creatorId: string;
+  createBy: string;
   parValue: string;
 }

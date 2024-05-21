@@ -15,7 +15,8 @@
     "@typegoose/typegoose": "^11.6.0",
     "md5": "^2.3.0",
     "mongoose": "^7.6.1",
-    "pm2": "^5.3.0"
+    "pm2": "^5.3.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@midwayjs/cli": "^2.0.0",
@@ -41,7 +42,7 @@
     "lint:fix": "mwts fix",
     "ci": "npm run cov",
     "build": "midway-bin build -c",
-    "serve":"pm2 start ./bootstrap.js"
+    "serve": "pm2 start ./bootstrap.js"
   },
   "midway-bin-clean": [
     ".vscode/.tsbuildinfo",

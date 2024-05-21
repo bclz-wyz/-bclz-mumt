@@ -27,16 +27,16 @@ export class CardService {
    * */
   async createCards(options: IBatchCreateCardOptions) {
     const res = new LzResponse();
-    const { count, type, creatorId, parValue } = options;
+    const { count, type, createBy, parValue } = options;
     /**
      * 在数据库中生成多张卡密，卡密的数量由count决定，卡密内容为32位随机字符串
      */
     const cards = [];
-    const createTime = new Date().valueOf().toString().substring(0, 10);
+    const createTime = new Date().valueOf().toString().substring(0, 13);
     for (let i = 0; i < count; i++) {
       cards.push({
         type,
-        creatorId,
+        createBy,
         parValue,
         id: md5(Math.random().toString(36)).toUpperCase(),
         createTime,
@@ -74,7 +74,7 @@ export class CardService {
     let targetCard = await this.cardModel.findOne({ id, status: '0' });
 
     if (targetCard?.status === '0') {
-      targetCard.useTime = new Date().valueOf().toString().substring(0, 10);
+      targetCard.useTime = new Date().valueOf().toString().substring(0, 13);
       targetCard.userId = qNumber;
       targetCard.status = '1';
       targetCard = await targetCard.save();
@@ -121,7 +121,7 @@ export class CardService {
     pageSize: number;
     type?: string;
     status?: string;
-    creatorId?: string;
+    createBy?: string;
     userId?: string;
   }) {
     const res = new LzResponse();

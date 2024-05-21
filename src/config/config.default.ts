@@ -1,6 +1,8 @@
 import { MidwayConfig } from '@midwayjs/core';
 import { User } from '../entity/user';
 import { Card } from '../entity/card';
+import { Piaxi } from '../entity/piaxi';
+import { Task } from '../entity/tasks';
 
 export default {
   // use for cookie sign key, should change to your own and keep security
@@ -20,7 +22,7 @@ export default {
           pass: 'Azx761055137.',
         },
         // 关联实体
-        entities: [User, Card],
+        entities: [User, Card, Piaxi, Task],
       },
     },
   },

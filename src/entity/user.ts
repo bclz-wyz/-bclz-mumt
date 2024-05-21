@@ -1,6 +1,7 @@
 import { prop } from '@typegoose/typegoose';
+import { Base } from './base';
 
-export class User {
+export class User extends Base {
   /**
    * 用户游戏ID
    */
@@ -23,7 +24,7 @@ export class User {
    * @description 创建人
    */
   @prop({ type: () => String, required: true })
-  public creatorId: string;
+  public createBy: string;
 
   /**
    * 用户状态：0-正常，1-停用
@@ -57,7 +58,7 @@ export class User {
    */
   @prop({
     type: () => String,
-    default: new Date().valueOf().toString().substring(0, 10),
+    default: new Date().valueOf().toString().substring(0, 13),
   })
   public expireTime?: string;
 
@@ -78,7 +79,7 @@ export class User {
    */
   @prop({
     type: () => String,
-    default: new Date().valueOf().toString().substring(0, 10),
+    default: new Date().valueOf().toString().substring(0, 13),
   })
   public lastLoginTime?: string;
 
@@ -90,7 +91,7 @@ export class User {
    */
   @prop({
     type: () => String,
-    default: new Date().valueOf().toString().substring(0, 10),
+    default: new Date().valueOf().toString().substring(0, 13),
   })
   public registerTime?: string;
 }
