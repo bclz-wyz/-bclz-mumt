@@ -9,7 +9,7 @@ WORKDIR /app
 # 将本地文件复制到项目文件夹下
 COPY . /app
 
-RUN yarn config set registry https://registry.npm.taobao.org/
+RUN yarn config set registry https://registry.npmjs.org
 
 # RUN yarn install -g npm@10.2.1
 
